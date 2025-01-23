@@ -1,16 +1,16 @@
 package com.example.user_service.controllers;
 
+import com.example.user_service.dtos.NewUser;
 import com.example.user_service.dtos.UserDTO;
 import com.example.user_service.models.RolType;
 import com.example.user_service.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -23,25 +23,25 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers(){
 
-        Set<UserDTO> users = userService.getUsers();
+        List<UserDTO> users = userService.getUsers();
 
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/roles")
     public ResponseEntity<?> getAllUsersRoles(){
-        Set<RolType> rolTypes = userService.getAllRoles();
+        List<RolType> rolTypes = userService.getAllRoles();
 
         return new ResponseEntity<>(rolTypes, HttpStatus.OK);
     }
 
-//    @PostMapping("/users")
-//    public ResponseEntity<?> postUser(){
-//
-//        userService.createUser();
-//
-//
-//    }
+    @PostMapping("/users")
+    public ResponseEntity<?> postUser(@Valid @RequestBody NewUser newUser){
+
+        UserDTO userDTO = userService.createUser(newUser);
+
+        return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
+    }
 
 
 }
