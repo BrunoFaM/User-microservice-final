@@ -2,6 +2,7 @@ package com.example.user_service.services.implementations;
 
 import com.example.user_service.dtos.NewUser;
 import com.example.user_service.dtos.UserDTO;
+import com.example.user_service.exceptions.UserNotFoundException;
 import com.example.user_service.models.RolType;
 import com.example.user_service.models.UserEntity;
 import com.example.user_service.repositories.UserRepository;
@@ -45,5 +46,17 @@ public class UserServiceImpl implements UserService {
                 .map(userEntity -> userEntity.getRole())
                 .toList();
         return roles;
+    }
+
+    private UserEntity getUserByEmail(String email) throws UserNotFoundException {
+
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
+
+    }
+
+    @Override
+    public Long getUserIdByEmail(String email) throws UserNotFoundException {
+        UserEntity user = getUserByEmail(email);
+        return user.getId();
     }
 }

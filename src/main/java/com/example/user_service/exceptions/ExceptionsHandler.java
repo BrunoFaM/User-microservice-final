@@ -24,4 +24,10 @@ public class ExceptionsHandler {
         return errorMap;
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(UserNotFoundException.class)
+    public String handleUserNotFound(Exception exception){
+        return exception.getMessage();
+    }
+
 }

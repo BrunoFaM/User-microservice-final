@@ -2,6 +2,7 @@ package com.example.user_service.controllers;
 
 import com.example.user_service.dtos.NewUser;
 import com.example.user_service.dtos.UserDTO;
+import com.example.user_service.exceptions.UserNotFoundException;
 import com.example.user_service.models.RolType;
 import com.example.user_service.services.UserService;
 import jakarta.validation.Valid;
@@ -26,6 +27,11 @@ public class UserController {
         List<UserDTO> users = userService.getUsers();
 
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{email}")
+    public ResponseEntity<?> getUserIdByEmail(@PathVariable String email) throws UserNotFoundException {
+        return new ResponseEntity<>(userService.getUserIdByEmail(email), HttpStatus.OK);
     }
 
     @GetMapping("/roles")
