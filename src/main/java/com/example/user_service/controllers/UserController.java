@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/users")
+    @GetMapping
     public ResponseEntity<?> getAllUsers(){
 
         List<UserDTO> users = userService.getUsers();
@@ -29,7 +29,7 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping("/users/{email}")
+    @GetMapping("/{email}")
     public ResponseEntity<?> getUserIdByEmail(@PathVariable String email) throws UserNotFoundException {
         return new ResponseEntity<>(userService.getUserIdByEmail(email), HttpStatus.OK);
     }
@@ -41,7 +41,7 @@ public class UserController {
         return new ResponseEntity<>(rolTypes, HttpStatus.OK);
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public ResponseEntity<?> postUser(@Valid @RequestBody NewUser newUser){
 
         UserDTO userDTO = userService.createUser(newUser);
