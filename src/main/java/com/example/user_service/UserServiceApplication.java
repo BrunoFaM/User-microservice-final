@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
 
@@ -17,6 +18,9 @@ public class UserServiceApplication {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	public static void main(String[] args) {
 		SpringApplication.run(UserServiceApplication.class, args);
 	}
@@ -24,9 +28,9 @@ public class UserServiceApplication {
 	@Bean
 	CommandLineRunner initData(){
 		return args -> {
-			UserEntity admin = new UserEntity("admin", "admin@gmail.com");
+			UserEntity admin = new UserEntity("admin", "admin@gmail.com", passwordEncoder.encode("admin"));
 			admin.setRole(RolType.ADMIN);
-			userRepository.saveAll(Set.of(admin, new UserEntity("Juan", "juan@gmail.com"), new UserEntity("katy", "katy@hotmail.com")));
+			userRepository.saveAll(Set.of(admin, new UserEntity("Juan", "juan@gmail.com", passwordEncoder.encode("1234")), new UserEntity("katy", "katy@hotmail.com", passwordEncoder.encode("2345"))));
 		};
 	}
 }

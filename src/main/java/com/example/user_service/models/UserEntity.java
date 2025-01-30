@@ -1,9 +1,6 @@
 package com.example.user_service.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class UserEntity {
@@ -11,17 +8,20 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
+    private String email;
 
-    private String username, email;
+    private String username, password;
 
     private RolType role = RolType.USER;
 
     public UserEntity() {
     }
 
-    public UserEntity( String username, String email) {
+    public UserEntity( String username, String email, String password) {
         this.email = email;
         this.username = username;
+        this.password = password;
     }
 
     public Long getId() {
@@ -31,6 +31,14 @@ public class UserEntity {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setUsername(String username) {
