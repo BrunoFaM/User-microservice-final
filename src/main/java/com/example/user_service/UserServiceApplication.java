@@ -30,7 +30,7 @@ public class UserServiceApplication {
 		return args -> {
 			UserEntity admin = new UserEntity("admin", "admin@gmail.com", passwordEncoder.encode("admin"));
 			admin.setRole(RolType.ADMIN);
-			userRepository.saveAll(Set.of(admin, new UserEntity("Juan", "juan@gmail.com", passwordEncoder.encode("1234")), new UserEntity("katy", "katy@hotmail.com", passwordEncoder.encode("2345"))));
+			userRepository.saveAll(Set.of(admin, new UserEntity("Juan", "juan@gmail.com", passwordEncoder.encode("1234")), new UserEntity("katy", "katy@hotmail.com", passwordEncoder.encode("2345")), new UserEntity("bruno", "brunomoron56@gmail.com", passwordEncoder.encode("1234"))));
 		};
 	}
 }

@@ -2,6 +2,7 @@ package com.example.user_service.controllers;
 
 import com.example.user_service.dtos.NewUser;
 import com.example.user_service.dtos.UserDTO;
+import com.example.user_service.exceptions.EmailAlredyregisterException;
 import com.example.user_service.exceptions.UserNotFoundException;
 import com.example.user_service.models.RolType;
 import com.example.user_service.services.UserService;
@@ -42,7 +43,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> postUser(@Valid @RequestBody NewUser newUser){
+    public ResponseEntity<?> postUser(@Valid @RequestBody NewUser newUser) throws EmailAlredyregisterException {
 
         UserDTO userDTO = userService.createUser(newUser);
 

@@ -3,10 +3,13 @@ package com.example.user_service.controllers;
 import com.example.user_service.config.JwtUtils;
 import com.example.user_service.dtos.LoginRequest;
 import com.example.user_service.dtos.NewUser;
+import com.example.user_service.dtos.UserDTO;
+import com.example.user_service.exceptions.EmailAlredyregisterException;
 import com.example.user_service.exceptions.UserNotFoundException;
 import com.example.user_service.models.UserEntity;
 import com.example.user_service.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,11 +52,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @Transactional
     @Operation(summary = "Register a user", description = "Create a user with Role of user")
-    public ResponseEntity<?> registerUser(@RequestBody @Valid NewUser newUser){
-        userService.createUser(newUser);
+    public ResponseEntity<?> registerUser(@RequestBody @Valid NewUser newUser) throws EmailAlredyregisterException {
+        UserDTO user = userService.createUser(newUser);
 
-        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
 
     }
 }

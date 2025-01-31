@@ -2,6 +2,7 @@ package com.example.user_service.services;
 
 import com.example.user_service.dtos.NewUser;
 import com.example.user_service.dtos.UserDTO;
+import com.example.user_service.exceptions.EmailAlredyregisterException;
 import com.example.user_service.exceptions.UserNotFoundException;
 import com.example.user_service.models.RolType;
 import com.example.user_service.models.UserEntity;
@@ -16,7 +17,7 @@ public interface UserService {
 
     UserEntity getUserByEmail(String email) throws UserNotFoundException;
 
-    UserDTO createUser(NewUser newUser);
+    UserDTO createUser(NewUser newUser) throws EmailAlredyregisterException;
 
     List<RolType> getAllRoles();
 

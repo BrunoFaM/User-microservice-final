@@ -30,4 +30,9 @@ public class ExceptionsHandler {
         return exception.getMessage();
     }
 
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(EmailAlredyregisterException.class)
+    public String handleEmailAlredyRegister(Exception exception){
+        return exception.getMessage();
+    }
 }
