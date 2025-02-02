@@ -1,5 +1,6 @@
 package com.example.user_service.services.implementations;
 
+import com.example.user_service.config.JwtUtils;
 import com.example.user_service.dtos.NewUser;
 import com.example.user_service.dtos.UserDTO;
 import com.example.user_service.exceptions.EmailAlredyregisterException;
@@ -7,7 +8,9 @@ import com.example.user_service.exceptions.UserNotFoundException;
 import com.example.user_service.models.RolType;
 import com.example.user_service.models.UserEntity;
 import com.example.user_service.repositories.UserRepository;
+import com.example.user_service.services.MessageSenderService;
 import com.example.user_service.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,10 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private AmqpTemplate amqpTemplate;
+    private MessageSenderService messageSenderService;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Override
     public List<UserDTO> getUsers() {
@@ -42,14 +48,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDTO getUserData(HttpServletRequest request) throws UserNotFoundException {
+        String userEmail = jwtUtils.getEmail(request);
+        UserEntity user = this.getUserByEmail(userEmail);
+        return new UserDTO(user);
+    }
+
+    @Override
     public UserDTO createUser(NewUser newUser) throws EmailAlredyregisterException {
         validateNewUser(newUser);
         UserEntity user = new UserEntity(newUser.username(), newUser.email(), passwordEncoder.encode(newUser.password()));
         userRepository.save(user);
         // async call to email
         UserDTO createdUser = new UserDTO(user);
-
-        amqpTemplate.convertAndSend("userMailExchange", "email.key", createdUser);
+        
+        messageSenderService.sendSuccessfulRegisterMessage(createdUser);
 
         return new UserDTO(user);
     }
@@ -73,7 +86,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity getUserByEmail(String email) throws UserNotFoundException {
 
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
+        return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
     }
 

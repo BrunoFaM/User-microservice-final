@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +41,21 @@ public class JwtUtils {
         claims.put("role", rolType.toString());
         claims.put("id", id.toString());
         return generateToken(username, claims);
+    }
+
+    public String getEmail(HttpServletRequest request){
+        String token = getCleanToken(request);
+        return this.extractUsername(token);
+    }
+
+    public Long getUserId(HttpServletRequest request){
+        String token = getCleanToken(request);
+        return Long.valueOf(parseClaims(token).get("id", String.class));
+
+    }
+
+    private String getCleanToken(HttpServletRequest request){
+        return request.getHeader("Authorization").substring(7);
     }
 
     public String extractUsername(String token) {

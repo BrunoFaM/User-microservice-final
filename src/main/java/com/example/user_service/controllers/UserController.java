@@ -6,6 +6,7 @@ import com.example.user_service.exceptions.EmailAlredyregisterException;
 import com.example.user_service.exceptions.UserNotFoundException;
 import com.example.user_service.models.RolType;
 import com.example.user_service.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,32 +24,12 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<?> getAllUsers(){
+    public ResponseEntity<?> getCurrentUserData(HttpServletRequest request) throws UserNotFoundException {
+        UserDTO user = userService.getUserData(request);
 
-        List<UserDTO> users = userService.getUsers();
-
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<?> getUserIdByEmail(@PathVariable String email) throws UserNotFoundException {
-        return new ResponseEntity<>(userService.getUserIdByEmail(email), HttpStatus.OK);
-    }
-
-    @GetMapping("/roles")
-    public ResponseEntity<?> getAllUsersRoles(){
-        List<RolType> rolTypes = userService.getAllRoles();
-
-        return new ResponseEntity<>(rolTypes, HttpStatus.OK);
-    }
-
-    @PostMapping
-    public ResponseEntity<?> postUser(@Valid @RequestBody NewUser newUser) throws EmailAlredyregisterException {
-
-        UserDTO userDTO = userService.createUser(newUser);
-
-        return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
-    }
 
 
 }

@@ -15,17 +15,17 @@ public class RabbitConfig {
 
     @Bean
     public Queue userQueue(){
-        return new Queue("userMailQueue");
+        return new Queue("userQueue");
     }
 
     @Bean
-    public TopicExchange userExchange() {
-        return new TopicExchange("userMailExchange");
+    public TopicExchange exchange() {
+        return new TopicExchange("exchange");
     }
 
     @Bean
-    public Binding userBinding(Queue userQueue, TopicExchange userExchange) {
-        return BindingBuilder.bind(userQueue).to(userExchange).with("email.key");
+    public Binding userBinding(Queue userQueue, TopicExchange exchange) {
+        return BindingBuilder.bind(userQueue).to(exchange).with("routing.key6");
     }
 
     @Bean
